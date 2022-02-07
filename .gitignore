@@ -2,6 +2,8 @@
 /dist
 /node_modules
 package-lock.json
+.env.stage.dev
+.env.stage.prod
 # Logs
 logs
 *.log
