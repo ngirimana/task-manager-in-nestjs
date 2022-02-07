@@ -5,8 +5,12 @@ import { Task } from './task.entity';
 import { TaskStatus } from './task-status.enum';
 import { User } from 'src/auth/user.entity';
 import { GetUser } from 'src/auth/get-user.decorator';
+import { Logger, InternalServerErrorException } from '@nestjs/common';
+
 @EntityRepository(Task)
 export class TaskRepository extends Repository<Task> {
+  private logger = new Logger('TaskRepository');
+
   async getTasks(
     filterDto: GetTasksFilterDto,
     @GetUser() user: User,
@@ -23,9 +27,16 @@ export class TaskRepository extends Repository<Task> {
         { search: `%${search.toLowerCase()}%` },
       );
     }
-    const tasks = await query.getMany();
-
-    return tasks;
+    try {
+      const tasks = await query.getMany();
+      return tasks;
+    } catch (error) {
+      throw new InternalServerErrorException();
+      this.logger.error(
+        `Failed to get tasks for the user "${user.username}". Filters:"${filterDto}`,
+        error.stack,
+      );
+    }
   }
   async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
     const { title, description } = createTaskDto;
