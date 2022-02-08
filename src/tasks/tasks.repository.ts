@@ -3,8 +3,8 @@ import { CreateTaskDto } from './dto/create-task-dto';
 import { EntityRepository, Repository } from 'typeorm';
 import { Task } from './task.entity';
 import { TaskStatus } from './task-status.enum';
-import { User } from 'src/auth/user.entity';
-import { GetUser } from 'src/auth/get-user.decorator';
+import { User } from '../auth/user.entity';
+import { GetUser } from '../auth/get-user.decorator';
 import { Logger, InternalServerErrorException } from '@nestjs/common';
 
 @EntityRepository(Task)
